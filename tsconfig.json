@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+      "outDir": "./dist",
+      "target":"es2018",
+      "module": "commonjs",
+      "declaration": true,
+      "sourceMap": true,
+      "removeComments": false
+  },
+  "include": [
+    "./src/**/*.ts"
+    ],
+  "exclude": [
+    "./dist",
+    "./samples",
+    "node_modules",
+  ]
+}
