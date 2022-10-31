@@ -31,8 +31,8 @@ const x509Device = {
   starts: 'disabled',
   authentication: {
     x509Thumbprint : {
-      primaryThumbprint: '0000000000000000000000000000000000000000',
-      secondaryThumbprint: '1111111111111111111111111111111111111111'
+      primaryThumbprint: uuid.v4().replace(/-/g, ''),
+      secondaryThumbprint: uuid.v4().replace(/-/g, '')
     }
   }
 };
