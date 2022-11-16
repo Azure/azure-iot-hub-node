@@ -10,3 +10,5 @@ coverage
 pl
 # don't use rules on the config file
 .eslintrc.js
+# don't spell check the package.json
+package.json

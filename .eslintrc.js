@@ -7,6 +7,7 @@ module.exports = {
   },
   "extends": [
     "eslint:recommended",
+    "plugin:security/recommended",
     "plugin:mocha/recommended"
   ],
   "plugins": [
@@ -15,7 +16,8 @@ module.exports = {
     "jsdoc"
   ],
   "parserOptions": {
-    "ecmaVersion": 8
+    "ecmaVersion": 8,
+    tsconfigRootDir: __dirname
   },
   "overrides": [
     {
@@ -32,7 +34,7 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-inferrable-types": "off",
         "@typescript-eslint/no-namespace": "off",
-        "@typescript-eslint/member-ordering": ["error", {"default": ["abstract-method", "instance-method", "static-method"]}],
+        "@typescript-eslint/member-ordering": ["error", { "default": ["abstract-method", "instance-method", "static-method"] }],
         "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
         "@typescript-eslint/dot-notation": "error",
         "@typescript-eslint/member-delimiter-style": [
@@ -71,6 +73,7 @@ module.exports = {
     },
   ],
   "rules": {
+    "security/detect-object-injection": "off",
     "mocha/no-setup-in-describe": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     "arrow-parens": [
@@ -88,7 +91,7 @@ module.exports = {
       "error",
       "smart"
     ],
-    "id-blacklist": [
+    "id-denylist": [
       "error",
       "any",
       "Number",
