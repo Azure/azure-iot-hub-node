@@ -21,18 +21,25 @@ const badConnectionStrings = [
   makeConnectionString(cn.HostName, cn.SharedAccessKeyName, 'bad'),
 ];
 
+function one() {
+  return '0000000000000000000000000000000000000000';
+}
+function two() {
+  return '1111111111111111111111111111111111111111';
+}
+
 let basicDevice = {
-  deviceId: 'testDevice' + Math.random(),
+  deviceId: 'testDevice' + uuid.v4(),
   status: 'disabled'
 };
 
 const x509Device = {
-  deviceId: 'testDevice' + Math.random(),
+  deviceId: 'testDevice' + uuid.v4(),
   starts: 'disabled',
   authentication: {
     x509Thumbprint : {
-      primaryThumbprint: uuid.v4().replace(/-/g, ''),
-      secondaryThumbprint: uuid.v4().replace(/-/g, '')
+      primaryThumbprint: one(),
+      secondaryThumbprint: two()
     }
   }
 };
