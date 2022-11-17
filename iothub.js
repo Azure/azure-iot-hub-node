@@ -23,7 +23,7 @@
  */
 module.exports = {
   Client: require('./dist/client.js').Client,
-  version: require('./dist/version.js'),
+  versionQueryString: require('./dist/version.js').versionQueryString,
   ConnectionString: require('./dist/connection_string.js'),
   Registry: require('./dist/registry.js').Registry,
   SharedAccessSignature: require('./dist/shared_access_signature.js'),
