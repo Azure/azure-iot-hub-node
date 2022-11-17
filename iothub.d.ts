@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 export { Client } from './dist/client';
-export { ConnectionString } from './dist/connection_string';
+export import ConnectionString = require('./dist/connection_string');
 export { versionQueryString } from './dist/version';
 export { Registry } from './dist/registry';
 export import SharedAccessSignature = require('./dist/shared_access_signature');
