@@ -38,3 +38,38 @@ export interface DeviceMethodParams {
      */
     connectTimeoutInSeconds?: number; // default is 0
 }
+
+/**
+ * Describes the initial request sent by the service to the device to initiate a cloud-to-device TCP streaming connection.
+ */
+export interface StreamInitiation {
+    /**
+     * Name of the requested stream (unique in case multiple streams are used)
+     */
+    streamName: string;
+
+    /**
+     * Timeout (in seconds) to wait for a connected device to respond.
+     */
+    responseTimeoutInSeconds: number;
+
+    /**
+     * Timeout (in seconds) to wait for a disconnected device to connect.
+     */
+    connectTimeoutInSeconds: number;
+
+    /**
+     * ???
+     */
+    contentType: string;
+
+    /**
+     * ???
+     */
+    contentEncoding: string;
+
+    /**
+     * ???
+     */
+    payload: any;
+  }
