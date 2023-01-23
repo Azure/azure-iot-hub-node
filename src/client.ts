@@ -5,7 +5,7 @@
 
 import { EventEmitter } from 'events';
 import { Agent } from 'https';
-import { anHourFromNow, errors, results, Message, Receiver, SharedAccessSignature, callbackToPromise, encodeUriComponentStrict, endpoint } from 'azure-iot-common';
+import { anHourFromNow, errors, results, Message, Receiver, SharedAccessSignature, callbackToPromise, encodeUriComponentStrict } from 'azure-iot-common';
 import { RetryOperation, RetryPolicy, ExponentialBackOffWithJitter } from 'azure-iot-common';
 import * as ConnectionString from './connection_string';
 import { Amqp } from './amqp';
@@ -16,6 +16,7 @@ import { StreamInitiationResult } from './stream_initiation_result';
 import { Callback, tripleValueCallbackToPromise } from 'azure-iot-common';
 import { IncomingMessage } from 'http';
 import { TokenCredential } from '@azure/core-http';
+import { apiVersion } from './version';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json');
@@ -424,7 +425,7 @@ export class Client extends EventEmitter {
       iothub-streaming-connect-timeout-in-seconds: <streamInitiation.connectTimeoutInSeconds>
       iothub-streaming-response-timeout-in-seconds: <streamInitiation.responseTimeoutInSeconds>
       ```]*/
-      const path = '/twins/' + encodeUriComponentStrict(deviceId) + '/streams/' + streamInitiation.streamName + '?api-version=' + endpoint.apiVersion;
+      const path = '/twins/' + encodeUriComponentStrict(deviceId) + '/streams/' + streamInitiation.streamName + '?api-version=' + apiVersion;
       const httpHeaders = {
         'iothub-streaming-connect-timeout-in-seconds': streamInitiation.connectTimeoutInSeconds,
         'iothub-streaming-response-timeout-in-seconds': streamInitiation.responseTimeoutInSeconds
