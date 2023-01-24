@@ -16,7 +16,7 @@ import { StreamInitiationResult } from './stream_initiation_result';
 import { Callback, tripleValueCallbackToPromise } from 'azure-iot-common';
 import { IncomingMessage } from 'http';
 import { TokenCredential } from '@azure/core-http';
-import { apiVersion } from './version';
+import { versionQueryString } from './version';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json');
@@ -425,7 +425,7 @@ export class Client extends EventEmitter {
       iothub-streaming-connect-timeout-in-seconds: <streamInitiation.connectTimeoutInSeconds>
       iothub-streaming-response-timeout-in-seconds: <streamInitiation.responseTimeoutInSeconds>
       ```]*/
-      const path = '/twins/' + encodeUriComponentStrict(deviceId) + '/streams/' + streamInitiation.streamName + '?api-version=' + apiVersion;
+      const path = '/twins/' + encodeUriComponentStrict(deviceId) + '/streams/' + streamInitiation.streamName + versionQueryString();
       const httpHeaders = {
         'iothub-streaming-connect-timeout-in-seconds': streamInitiation.connectTimeoutInSeconds,
         'iothub-streaming-response-timeout-in-seconds': streamInitiation.responseTimeoutInSeconds

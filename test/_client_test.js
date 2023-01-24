@@ -11,7 +11,7 @@ const Amqp = require('../dist/amqp.js').Amqp;
 const Client = require('../dist/client.js').Client;
 const Message = require('azure-iot-common').Message;
 const errors = require('azure-iot-common').errors;
-const apiVersion = require('../src/version').apiVersion;
+const versionQueryString = require('../dist/version').versionQueryString;
 const SimulatedAmqp = require('./amqp_simulated.js');
 const transportSpecificTests = require('./_client_common_testrun.js');
 
@@ -662,7 +662,7 @@ describe('Client', function () {
       let fakeRestClient = {
         executeApiCall: function (method, path, headers, body, timeout, callback) {
           assert.strictEqual(method, 'POST');
-          assert.strictEqual(path, '/twins/' + fakeDeviceId + '/streams/' + fakeStreamInitiation.streamName + '?api-version=' + apiVersion);
+          assert.strictEqual(path, '/twins/' + fakeDeviceId + '/streams/' + fakeStreamInitiation.streamName + versionQueryString());
           assert.strictEqual(headers['iothub-streaming-connect-timeout-in-seconds'], fakeStreamInitiation.connectTimeoutInSeconds);
           assert.strictEqual(headers['iothub-streaming-response-timeout-in-seconds'], fakeStreamInitiation.responseTimeoutInSeconds);
           /*Tests_SRS_NODE_IOTHUB_CLIENT_16_034: [The `initiateStream` method shall have a custom timeout set to the value in milliseconds of the sum of the streamInitiation.connectTimeoutInSeconds and streamInitiation.responseTimeoutInSeconds.]*/
