@@ -14,7 +14,7 @@ import { RestApiClient } from 'azure-iot-http-base';
 import { DeviceMethodParams, IncomingMessageCallback, createResultWithIncomingMessage, ResultWithIncomingMessage } from './interfaces';
 import { Callback, tripleValueCallbackToPromise } from 'azure-iot-common';
 import { IncomingMessage } from 'http';
-import { TokenCredential } from '@azure/core-http';
+import { TokenCredential } from '@azure/core-auth';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json');

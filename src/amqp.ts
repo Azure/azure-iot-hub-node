@@ -14,7 +14,7 @@ import { translateError } from './amqp_service_errors.js';
 import { Client } from './client';
 import { ServiceReceiver } from './service_receiver.js';
 import { ResultWithIncomingMessage, IncomingMessageCallback, createResultWithIncomingMessage } from './interfaces.js';
-import { AccessToken } from '@azure/core-http';
+import { AccessToken } from '@azure/core-auth';
 
 const debug = dbg('azure-iothub:Amqp');
 

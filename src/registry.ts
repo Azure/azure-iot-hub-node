@@ -15,7 +15,7 @@ import { Device } from './device';
 import { IncomingMessageCallback } from './interfaces';
 import { Module } from './module';
 import { TripleValueCallback, Callback, HttpResponseCallback, callbackToPromise, httpCallbackToPromise } from 'azure-iot-common';
-import { TokenCredential } from '@azure/core-http';
+import { TokenCredential } from '@azure/core-auth';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json');
