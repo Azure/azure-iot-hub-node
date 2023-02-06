@@ -4,7 +4,7 @@
 
  'use strict';
 
- export const apiVersion = '2021-04-12';
+ export const apiVersion = '2018-10-20-preview';
 
  export function versionQueryString(): string {
   return '?api-version=' + apiVersion;

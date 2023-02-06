@@ -11,6 +11,7 @@ const Amqp = require('../dist/amqp.js').Amqp;
 const Client = require('../dist/client.js').Client;
 const Message = require('azure-iot-common').Message;
 const errors = require('azure-iot-common').errors;
+const versionQueryString = require('../dist/version').versionQueryString;
 const SimulatedAmqp = require('./amqp_simulated.js');
 const transportSpecificTests = require('./_client_common_testrun.js');
 
@@ -611,6 +612,160 @@ describe('Client', function () {
       const client = new Client(fakeTransport);
       client.setRetryPolicy(fakeRetryPolicy);
       client.open(function () {});
+    });
+  });
+
+  describe('initiateStream', function () {
+    /*Tests_SRS_NODE_IOTHUB_CLIENT_16_031: [The `initiateStream` method shall throw a `ReferenceError` if the `deviceId` is argument falsy.]*/
+    [undefined, null, ''].forEach(function (badDeviceId) {
+      it('throws a ReferenceError if \'deviceId\' is \'' + badDeviceId + '\'', function () {
+        let client = new Client(new EventEmitter(), {});
+        assert.throws(function () {
+          client.initiateStream(badDeviceId, {}, function () {});
+        }, ReferenceError);
+      });
+    });
+
+    /*Tests_SRS_NODE_IOTHUB_CLIENT_16_032: [The `initiateStream` method shall throw a `ReferenceError` if the `streamInitiation` argument is falsy.]*/
+    [undefined, null].forEach(function (badStreamInitiation) {
+      it('throws a ReferenceError if \'streamInitiation\' is \'' + badStreamInitiation + '\'', function () {
+        let client = new Client(new EventEmitter(), {});
+        assert.throws(function () {
+          client.initiateStream('deviceId', badStreamInitiation, function () {});
+        }, ReferenceError);
+      });
+    });
+
+    /*Tests_SRS_NODE_IOTHUB_CLIENT_16_033: [The `initiateStream` method shall send an HTTP request formatted as follows:
+    ```
+    POST /twins/encodeUriComponentStrict(<deviceId>)/streams/encodeUriComponentStrict(streamInitiation.streamName)
+
+    iothub-streaming-connect-timeout-in-seconds: <streamInitiation.connectTimeoutInSeconds>
+    iothub-streaming-response-timeout-in-seconds: <streamInitiation.responseTimeoutInSeconds>
+    ```]*/
+    it('sends a well-formatted HTTP request', function (testCallback) {
+      const fakeDeviceId = 'fakeDevice';
+      const fakeStreamInitiation = {
+        connectTimeoutInSeconds: 42,
+        responseTimeoutInSeconds: 1337,
+        streamName: 'streamName'
+      };
+      const fakeResponse = {
+        statusCode: 200,
+        headers: {
+          'iothub-streaming-is-accepted': 'True',
+          'iothub-streaming-url': 'wss://test',
+          'iothub-streaming-authToken': 'token',
+        }
+      };
+      let fakeResult = "";
+      let fakeRestClient = {
+        executeApiCall: function (method, path, headers, body, timeout, callback) {
+          assert.strictEqual(method, 'POST');
+          assert.strictEqual(path, '/twins/' + fakeDeviceId + '/streams/' + fakeStreamInitiation.streamName + versionQueryString());
+          assert.strictEqual(headers['iothub-streaming-connect-timeout-in-seconds'], fakeStreamInitiation.connectTimeoutInSeconds);
+          assert.strictEqual(headers['iothub-streaming-response-timeout-in-seconds'], fakeStreamInitiation.responseTimeoutInSeconds);
+          /*Tests_SRS_NODE_IOTHUB_CLIENT_16_034: [The `initiateStream` method shall have a custom timeout set to the value in milliseconds of the sum of the streamInitiation.connectTimeoutInSeconds and streamInitiation.responseTimeoutInSeconds.]*/
+          assert.strictEqual(timeout, 1000 * (fakeStreamInitiation.connectTimeoutInSeconds + fakeStreamInitiation.responseTimeoutInSeconds));
+          callback(null, fakeResult, fakeResponse);
+        }
+      };
+
+      let client = new Client(new EventEmitter(), fakeRestClient);
+      client.initiateStream(fakeDeviceId, fakeStreamInitiation, function (err) {
+        testCallback(err);
+      });
+    });
+
+    it('returns a promise if no callback is specified', function (testCallback) {
+      const fakeDeviceId = 'fakeDevice';
+      const fakeStreamInitiation = {
+        connectTimeoutInSeconds: 42,
+        responseTimeoutInSeconds: 1337,
+        streamName: 'streamName'
+      };
+      const fakeResponse = {
+        statusCode: 200,
+        headers: {
+          'iothub-streaming-is-accepted': 'True',
+          'iothub-streaming-url': 'wss://test',
+          'iothub-streaming-authToken': 'token',
+        }
+      };
+      let fakeRestClient = {
+        executeApiCall: function (method, path, headers, body, timeout, callback) {
+          callback(null, undefined, fakeResponse);
+        }
+      };
+
+      let client = new Client(new EventEmitter(), fakeRestClient);
+      let resultPromise = client.initiateStream(fakeDeviceId, fakeStreamInitiation);
+      assert.instanceOf(resultPromise, Promise);
+      resultPromise.then(function (result) {
+        assert.strictEqual(result.uri, fakeResponse.headers['iothub-streaming-url']);
+        assert.strictEqual(result.authorizationToken, fakeResponse.headers['iothub-streaming-auth-token']);
+        assert.strictEqual(result.isAccepted, true);
+        testCallback();
+      });
+    });
+
+    /*Tests_SRS_NODE_IOTHUB_CLIENT_16_036: [The `initiateStream` method shall create a `StreamInitiationResult` object from the received HTTP response as follows:
+    streamInitiationResult.authorizationToken: response.headers['iothub-streaming-auth-token']
+    streamInitiationResult.uri: response.headers['iothub-streaming-url']
+    streamInitiationResult.isAccepted: true if response.headers['iothub-streaming-is-accepted'] is 'True', false otherwise.]*/
+    it('calls the callback with a well-formed response', function (testCallback) {
+      const fakeDeviceId = 'fakeDevice';
+      const fakeStreamInitiation = {
+        connectTimeoutInSeconds: 42,
+        responseTimeoutInSeconds: 1337,
+        streamName: 'streamName'
+      };
+      const fakeResponse = {
+        statusCode: 200,
+        headers: {
+          'iothub-streaming-is-accepted': 'True',
+          'iothub-streaming-url': 'wss://test',
+          'iothub-streaming-authToken': 'token',
+        }
+      };
+      let fakeRestClient = {
+        executeApiCall: function (method, path, headers, body, timeout, callback) {
+          callback(null, undefined, fakeResponse);
+        }
+      };
+
+      let client = new Client(new EventEmitter(), fakeRestClient);
+      client.initiateStream(fakeDeviceId, fakeStreamInitiation, function (err, result) {
+        if (err) {
+          testCallback(err);
+        } else {
+          assert.strictEqual(result.uri, fakeResponse.headers['iothub-streaming-url']);
+          assert.strictEqual(result.authorizationToken, fakeResponse.headers['iothub-streaming-auth-token']);
+          assert.strictEqual(result.isAccepted, true);
+          testCallback();
+        }
+      });
+    });
+
+    /*Tests_SRS_NODE_IOTHUB_CLIENT_16_035: [The `initiateStream` method shall call its callback with an error if the RestApiClient fails to execute the API call.]*/
+    it('calls the callback with an error if the RestApiClient fails to execute the API call', function (testCallback) {
+      const fakeError = new Error('fake');
+      const fakeStreamInitiation = {
+        connectTimeoutInSeconds: 42,
+        responseTimeoutInSeconds: 1337,
+        streamName: 'streamName'
+      };
+      let fakeRestClient = {
+        executeApiCall: function (method, path, headers, body, timeout, callback) {
+          callback(fakeError);
+        }
+      };
+
+      let client = new Client(new EventEmitter(), fakeRestClient);
+      client.initiateStream('deviceId', fakeStreamInitiation, function (err) {
+        assert.strictEqual(err, fakeError);
+        testCallback();
+      });
     });
   });
 });
