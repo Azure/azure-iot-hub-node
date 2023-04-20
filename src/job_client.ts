@@ -11,7 +11,7 @@ import { DeviceMethod } from './device_method';
 import { Query } from './query';
 import { DeviceMethodParams } from './interfaces';
 import { TripleValueCallback, tripleValueCallbackToPromise } from 'azure-iot-common';
-import { TokenCredential } from '@azure/core-http';
+import { TokenCredential } from '@azure/core-auth';
 import { versionQueryString } from './version';
 
 
