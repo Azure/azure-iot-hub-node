@@ -1,8 +1,8 @@
 const EventEmitter = require('events').EventEmitter;
 const assert = require('chai').assert;
 const sinon = require('sinon');
-const SenderLink = require('../dist/sender_link.js').SenderLink;
-const AmqpMessage = require('../dist/amqp_message.js').AmqpMessage;
+const SenderLink = require('../../dist/common-amqp/sender_link.js').SenderLink;
+const AmqpMessage = require('../../dist/common-amqp/amqp_message.js').AmqpMessage;
 
 describe('SenderLink', function () {
 

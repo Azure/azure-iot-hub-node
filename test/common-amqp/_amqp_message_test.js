@@ -4,8 +4,8 @@
 'use strict';
 
 const assert = require('chai').assert;
-const Message = require('azure-iot-common').Message;
-const AmqpMessage = require('../dist/amqp_message.js').AmqpMessage;
+const Message = require('../../dist/common-core/message').Message;
+const AmqpMessage = require('../../dist/common-amqp/amqp_message.js').AmqpMessage;
 const uuidv4 = require('uuid').v4;
 const rhea = require('rhea');
 

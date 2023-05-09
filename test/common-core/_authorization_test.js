@@ -4,7 +4,7 @@
 'use strict';
 
 const assert = require('chai').assert;
-const authorization = require('../dist/authorization.js');
+const authorization = require('../../dist/common-core/authorization.js');
 
 const key = Buffer.from('password').toString('base64');
 

@@ -4,8 +4,8 @@
 'use strict';
 
 const assert = require('chai').assert;
-const errors = require('azure-iot-common').errors;
-const translateError = require('../dist/amqp_common_errors.js').translateError;
+const errors = require('../../dist/common-core/errors');
+const translateError = require('../../dist/common-amqp/amqp_common_errors.js').translateError;
 
 
 /*Tests_SRS_NODE_DEVICE_AMQP_COMMON_ERRORS_16_012: [`translateError` shall return a custom error type according to this table if the AMQP error condition is one of the following:

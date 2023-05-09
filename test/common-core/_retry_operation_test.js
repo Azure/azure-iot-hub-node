@@ -6,8 +6,8 @@
 const assert = require('chai').assert;
 const sinon = require('sinon');
 
-const RetryOperation = require('../dist/retry_operation.js').RetryOperation;
-const NoRetry = require('../dist/retry_policy.js').NoRetry;
+const RetryOperation = require('../../dist/common-core/retry_operation.js').RetryOperation;
+const NoRetry = require('../../dist/common-core/retry_policy.js').NoRetry;
 
 const fakeOperationName = "__fake_op__";
 

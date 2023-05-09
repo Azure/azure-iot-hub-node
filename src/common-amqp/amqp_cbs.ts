@@ -4,7 +4,7 @@ import * as async from 'async';
 import { EventEmitter } from 'events';
 import * as dbg from 'debug';
 import { Session } from 'rhea';
-import { errors } from 'azure-iot-common';
+import * as errors from '../common-core/errors';
 import { AmqpMessage } from './amqp_message';
 import { SenderLink } from './sender_link';
 import { ReceiverLink } from './receiver_link';

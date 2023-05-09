@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { errors } from 'azure-iot-common';
+import * as errors from '../common-core/errors';
 import { AmqpError } from 'rhea';
 
 /**

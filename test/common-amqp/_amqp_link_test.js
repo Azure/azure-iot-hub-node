@@ -1,8 +1,8 @@
 const EventEmitter = require('events').EventEmitter;
 const assert = require('chai').assert;
 const sinon = require('sinon');
-const ReceiverLink = require('../dist/receiver_link.js').ReceiverLink;
-const SenderLink = require('../dist/sender_link.js').SenderLink;
+const ReceiverLink = require('../../dist/common-amqp/receiver_link.js').ReceiverLink;
+const SenderLink = require('../../dist/common-amqp/sender_link.js').SenderLink;
 
 describe('AmqpLink implementation unit tests', function () {
   [

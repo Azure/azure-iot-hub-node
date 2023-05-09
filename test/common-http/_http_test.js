@@ -1,6 +1,6 @@
 'use strict';
 
-const Http = require('../dist/http.js').Http;
+const Http = require('../../dist/common-http/http').Http;
 const https = require('https');
 const node_http = require('http');
 const assert = require('chai').assert;

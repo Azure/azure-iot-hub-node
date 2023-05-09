@@ -4,7 +4,7 @@
 'use strict';
 
 import { IncomingMessage } from 'http';
-import { TripleValueCallback } from 'azure-iot-common';
+import { TripleValueCallback } from './common-core/promise_utils';
 
 export type IncomingMessageCallback<TResult> = TripleValueCallback<TResult, IncomingMessage>;
 

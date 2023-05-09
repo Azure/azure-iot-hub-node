@@ -4,7 +4,7 @@
 'use strict';
 
 const assert = require('chai').assert;
-const Message = require('../dist/message.js').Message;
+const Message = require('../../dist/common-core/message.js').Message;
 
 const stringTestMsg = 'message';
 

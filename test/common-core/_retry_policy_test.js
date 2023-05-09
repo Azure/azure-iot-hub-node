@@ -6,9 +6,9 @@
 const assert = require('chai').assert;
 const sinon = require('sinon');
 
-const errors = require('../dist/errors.js');
-const ExponentialBackOffWithJitter = require('../dist/retry_policy.js').ExponentialBackOffWithJitter;
-const NoRetry = require('../dist/retry_policy.js').NoRetry;
+const errors = require('../../dist/common-core/errors.js');
+const ExponentialBackOffWithJitter = require('../../dist/common-core/retry_policy.js').ExponentialBackOffWithJitter;
+const NoRetry = require('../../dist/common-core/retry_policy.js').NoRetry;
 
 describe('RetryPolicy', function () {
   describe('ExponentialBackOffWithJitter', function () {

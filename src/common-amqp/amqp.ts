@@ -6,7 +6,9 @@
 import * as machina from 'machina';
 import urlParser = require('url');
 import { AmqpMessage } from './amqp_message';
-import { errors, results, Message } from 'azure-iot-common';
+import * as errors from '../common-core/errors';
+import * as results from '../common-core/results';
+import { Message } from '../common-core/message';
 import { ClaimsBasedSecurityAgent } from './amqp_cbs';
 import { SenderLink } from './sender_link';
 import { ReceiverLink } from './receiver_link';

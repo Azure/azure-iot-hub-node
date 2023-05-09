@@ -3,7 +3,9 @@
 
 'use strict';
 
-import { anHourFromNow, errors, SharedAccessSignature, X509 } from 'azure-iot-common';
+import { SharedAccessSignature } from '../common-core/shared_access_signature';
+import * as errors from '../common-core/errors';
+import { X509, anHourFromNow } from '../common-core/authorization';
 import { Http as HttpBase, HttpRequestOptions } from './http';
 import { AccessToken, TokenCredential } from '@azure/core-auth';
 import  * as uuid from 'uuid';

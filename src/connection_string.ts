@@ -3,7 +3,7 @@
 
 'use strict';
 
-import { ConnectionString } from 'azure-iot-common';
+import { ConnectionString } from './common-core/connection_string';
 
 /**
  * Parses a connection string from a string.

@@ -11,15 +11,15 @@ const assert = require('chai').assert;
 const sinon = require('sinon');
 const sinonTestFactory = require('sinon-test');
 const sinonTest = sinonTestFactory(sinon);
-const Amqp = require('../dist/amqp.js').Amqp;
-const MockCBSSecurityAgent = require('../dist/amqp_cbs.js');
-const MockReceiverLink = require('../dist/receiver_link.js');
-const MockSenderLink = require('../dist/sender_link.js');
-const ReceiverLink = require('../dist/receiver_link.js').ReceiverLink;
-const SenderLink = require('../dist/sender_link.js').SenderLink;
-const results = require('azure-iot-common').results;
-const errors = require('azure-iot-common').errors;
-const Message = require('azure-iot-common').Message;
+const Amqp = require('../../dist/common-amqp/amqp.js').Amqp;
+const MockCBSSecurityAgent = require('../../dist/common-amqp/amqp_cbs.js');
+const MockReceiverLink = require('../../dist/common-amqp/receiver_link.js');
+const MockSenderLink = require('../../dist/common-amqp/sender_link.js');
+const ReceiverLink = require('../../dist/common-amqp/receiver_link.js').ReceiverLink;
+const SenderLink = require('../../dist/common-amqp/sender_link.js').SenderLink;
+const results = require('../../dist/common-core/results');
+const errors = require('../../dist/common-core/errors');
+const Message = require('../../dist/common-core/message').Message;
 const EventEmitter = require('events').EventEmitter;
 
 describe('Amqp', function () {

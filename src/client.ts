@@ -5,14 +5,20 @@
 
 import { EventEmitter } from 'events';
 import { Agent } from 'https';
-import { anHourFromNow, errors, results, Message, Receiver, SharedAccessSignature } from 'azure-iot-common';
-import { RetryOperation, RetryPolicy, ExponentialBackOffWithJitter } from 'azure-iot-common';
+import { anHourFromNow } from './common-core/authorization';
+import { SharedAccessSignature } from './common-core/shared_access_signature';
+import * as results from './common-core/results';
+import * as errors from './common-core/errors';
+import { Message } from './common-core/message';
+import { Receiver } from './common-core/receiver';
+import { RetryOperation } from './common-core/retry_operation';
+import { RetryPolicy, ExponentialBackOffWithJitter } from './common-core/retry_policy';
 import * as ConnectionString from './connection_string';
 import { Amqp } from './amqp';
 import { DeviceMethod } from './device_method';
-import { RestApiClient } from 'azure-iot-http-base';
+import { RestApiClient } from './common-http/rest_api_client';
 import { DeviceMethodParams, IncomingMessageCallback, createResultWithIncomingMessage, ResultWithIncomingMessage } from './interfaces';
-import { Callback, tripleValueCallbackToPromise } from 'azure-iot-common';
+import { Callback, tripleValueCallbackToPromise } from './common-core/promise_utils';
 import { IncomingMessage } from 'http';
 import { TokenCredential } from '@azure/core-auth';
 

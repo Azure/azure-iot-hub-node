@@ -4,7 +4,7 @@
 'use strict';
 
 const assert = require('chai').assert;
-const errors = require('../dist/errors.js');
+const errors = require('../../dist/common-core/errors.js');
 
 describe('errors', function () {
 

@@ -4,7 +4,7 @@
 'use strict';
 
 import { uuid_to_string as rheaUuidToString, string_to_uuid as rheaStringToUuid, types as rheaTypes, message as rheaMessage } from 'rhea';
-import { Message } from 'azure-iot-common';
+import { Message } from '../common-core/message';
 
 /* tslint:disable:variable-name */
 /* tslint:enable:variable-name: [true, "check-format", allow-leading-underscore", "ban-keywords", "allow-snake-case"]*/

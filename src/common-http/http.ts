@@ -5,7 +5,8 @@
 
 import { request as http_request, ClientRequest, IncomingMessage } from 'http';
 import { request as https_request, RequestOptions } from 'https';
-import { Message, X509 } from 'azure-iot-common';
+import { Message } from '../common-core/message';
+import { X509 } from '../common-core/authorization';
 import dbg = require('debug');
 const debug = dbg('azure-iot-http-base.Http');
 

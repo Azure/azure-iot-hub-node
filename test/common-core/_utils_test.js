@@ -7,7 +7,7 @@ const sinon = require('sinon');
 const assert = require('chai').assert;
 const os = require('os');
 const getos = require('getos');
-const getAgentPlatformString = require('../dist/utils').getAgentPlatformString;
+const getAgentPlatformString = require('../../dist/common-core/utils').getAgentPlatformString;
 
 describe('getAgentPlatformString', function () {
   before(function () {

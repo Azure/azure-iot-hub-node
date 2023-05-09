@@ -4,7 +4,7 @@
 'use strict';
 
 const assert = require('chai').assert;
-const IotProperties = require('../dist/properties.js').Properties;
+const IotProperties = require('../../dist/common-core/properties.js').Properties;
 
 const propertyNum = 10;
 

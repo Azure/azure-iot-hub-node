@@ -3,10 +3,9 @@ const uuid = require('uuid');
 const assert = require('chai').assert;
 const sinon = require('sinon');
 
-const errors = require('azure-iot-common').errors;
-const AmqpMessage = require('../dist/amqp_message.js').AmqpMessage;
-
-const CBS = require('../dist/amqp_cbs.js').ClaimsBasedSecurityAgent;
+const errors = require('../../dist/common-core/errors');
+const AmqpMessage = require('../../dist/common-amqp/amqp_message.js').AmqpMessage;
+const CBS = require('../../dist/common-amqp/amqp_cbs.js').ClaimsBasedSecurityAgent;
 
 describe('ClaimsBasedSecurityAgent', function () {
   afterEach(sinon.restore);

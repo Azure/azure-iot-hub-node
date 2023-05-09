@@ -3,7 +3,8 @@
 
 'use strict';
 
-import { errors, tripleValueCallbackToPromise } from 'azure-iot-common';
+import * as errors from './common-core/errors';
+import { tripleValueCallbackToPromise } from './common-core/promise_utils';
 import * as _ from 'lodash';
 import { DeviceIdentity } from './device';
 import { Registry } from './registry';

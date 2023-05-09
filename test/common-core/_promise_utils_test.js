@@ -5,12 +5,12 @@
 'use strict';
 
 const assert = require('chai').assert;
-const callbackToPromise = require('../dist/promise_utils').callbackToPromise;
-const errorCallbackToPromise = require('../dist/promise_utils').errorCallbackToPromise;
-const noErrorCallbackToPromise = require('../dist/promise_utils').noErrorCallbackToPromise;
-const doubleValueCallbackToPromise = require('../dist/promise_utils').doubleValueCallbackToPromise;
-const tripleValueCallbackToPromise = require('../dist/promise_utils').tripleValueCallbackToPromise;
-const httpCallbackToPromise = require('../dist/promise_utils').httpCallbackToPromise;
+const callbackToPromise = require('../../dist/common-core/promise_utils').callbackToPromise;
+const errorCallbackToPromise = require('../../dist/common-core/promise_utils').errorCallbackToPromise;
+const noErrorCallbackToPromise = require('../../dist/common-core/promise_utils').noErrorCallbackToPromise;
+const doubleValueCallbackToPromise = require('../../dist/common-core/promise_utils').doubleValueCallbackToPromise;
+const tripleValueCallbackToPromise = require('../../dist/common-core/promise_utils').tripleValueCallbackToPromise;
+const httpCallbackToPromise = require('../../dist/common-core/promise_utils').httpCallbackToPromise;
 
 // eslint-disable-file mocha/no-mocha-arrows
 describe('PromiseUtils', () => {

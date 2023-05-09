@@ -5,7 +5,7 @@
 
 const assert = require('chai').assert;
 
-const endpoint = require('../dist/endpoint.js');
+const endpoint = require('../../dist/common-core/endpoint.js');
 const deviceId = 'mydevice';
 const moduleId = 'mymodule';
 

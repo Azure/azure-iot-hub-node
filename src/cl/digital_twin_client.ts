@@ -5,7 +5,7 @@
  */
 
 import { IotHubGatewayServiceAPIs as PLClient, IotHubGatewayServiceAPIsModels as Models } from '../pl/iotHubGatewayServiceAPIs';
-import { tripleValueCallbackToPromise, TripleValueCallback } from 'azure-iot-common';
+import { tripleValueCallbackToPromise, TripleValueCallback } from '../common-core/promise_utils';
 import { IoTHubTokenCredentials } from '../auth/iothub_token_credentials';
 import * as msRest from '@azure/ms-rest-js';
 
