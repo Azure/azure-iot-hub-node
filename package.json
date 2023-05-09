@@ -59,6 +59,7 @@
     "tstlint": "eslint test --ext .js -f visualstudio",
     "lint": "npm run hublint && npm run diglint && npm run tstlint",
     "build": "tsc",
+    "prepare": "npm -s run build",
     "unittest-min": "tsc && nyc --reporter lcov ./node_modules/mocha/bin/_mocha --reporter dot --parallel test/**/_*_test.js",
     "alltest-min": "tsc && nyc --reporter lcov ./node_modules/mocha/bin/_mocha --reporter dot --parallel test/**/_*_test*.js",
     "unittest": "tsc && nyc --reporter lcov --reporter text ./node_modules/mocha/bin/_mocha --parallel test/**/_*_test.js",
