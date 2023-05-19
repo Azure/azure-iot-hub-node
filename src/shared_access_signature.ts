@@ -3,7 +3,7 @@
 
 'use strict';
 
-import { SharedAccessSignature } from 'azure-iot-common';
+import { SharedAccessSignature } from './common-core/shared_access_signature';
 
 /**
  * Creates a shared access signature token to authenticate a service connection with an Azure IoT hub.

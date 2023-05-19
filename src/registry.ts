@@ -3,10 +3,14 @@
 
 'use strict';
 
-import { errors, SharedAccessSignature, ResultWithHttpResponse, X509, endpoint } from 'azure-iot-common';
+import { ResultWithHttpResponse } from './common-core/results';
+import * as errors from './common-core/errors';
+import { SharedAccessSignature } from './common-core/shared_access_signature';
+import { X509 } from './common-core/authorization';
+import * as endpoint from './common-core/endpoint';
 import { versionQueryString } from './version';
 import { Agent } from 'https';
-import { RestApiClient } from 'azure-iot-http-base';
+import { RestApiClient } from './common-http/rest_api_client';
 import * as ConnectionString from './connection_string';
 import { Twin } from './twin';
 import { Query } from './query';
@@ -14,7 +18,7 @@ import { Configuration, ConfigurationContent } from './configuration';
 import { Device } from './device';
 import { IncomingMessageCallback } from './interfaces';
 import { Module } from './module';
-import { TripleValueCallback, Callback, HttpResponseCallback, callbackToPromise, httpCallbackToPromise } from 'azure-iot-common';
+import { TripleValueCallback, Callback, HttpResponseCallback, callbackToPromise, httpCallbackToPromise } from './common-core/promise_utils';
 import { TokenCredential } from '@azure/core-auth';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

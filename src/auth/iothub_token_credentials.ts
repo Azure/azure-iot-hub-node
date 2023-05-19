@@ -4,7 +4,9 @@
  * license information.
  */
 import { ServiceClientCredentials, WebResource, Constants } from '@azure/ms-rest-js';
-import { ConnectionString, SharedAccessSignature, anHourFromNow } from 'azure-iot-common';
+import { ConnectionString } from '../common-core/connection_string';
+import { SharedAccessSignature } from '../common-core/shared_access_signature';
+import { anHourFromNow } from '../common-core/authorization';
 
 /**
  * Creates shared access signatures based on the connection string passed to the constructor.

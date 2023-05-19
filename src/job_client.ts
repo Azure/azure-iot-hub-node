@@ -6,11 +6,11 @@
 import { Agent } from 'https';
 import * as ConnectionString from './connection_string';
 import * as SharedAccessSignature from './shared_access_signature';
-import { RestApiClient } from 'azure-iot-http-base';
+import { RestApiClient } from './common-http/rest_api_client';
 import { DeviceMethod } from './device_method';
 import { Query } from './query';
 import { DeviceMethodParams } from './interfaces';
-import { TripleValueCallback, tripleValueCallbackToPromise } from 'azure-iot-common';
+import { TripleValueCallback, tripleValueCallbackToPromise } from './common-core/promise_utils';
 import { TokenCredential } from '@azure/core-auth';
 import { versionQueryString } from './version';
 

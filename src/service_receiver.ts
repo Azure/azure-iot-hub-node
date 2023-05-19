@@ -3,8 +3,11 @@
 
 'use strict';
 
-import { Message, results, Callback, ErrorCallback, callbackToPromise, errorCallbackToPromise } from 'azure-iot-common';
-import { ReceiverLink, AmqpMessage } from 'azure-iot-amqp-base';
+import { Message } from './common-core/message';
+import * as results from './common-core/results';
+import { Callback, ErrorCallback, callbackToPromise, errorCallbackToPromise } from './common-core/promise_utils';
+import { ReceiverLink } from './common-amqp/receiver_link';
+import { AmqpMessage } from './common-amqp/amqp_message';
 import { EventEmitter } from 'events';
 import { Client } from './client';
 

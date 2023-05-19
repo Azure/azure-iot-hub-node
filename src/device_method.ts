@@ -3,9 +3,9 @@
 
 'use strict';
 
-import { RestApiClient } from 'azure-iot-http-base';
+import { RestApiClient } from './common-http/rest_api_client';
 import { DeviceMethodParams } from './interfaces';
-import { TripleValueCallback, tripleValueCallbackToPromise } from 'azure-iot-common';
+import { TripleValueCallback, tripleValueCallbackToPromise } from './common-core/promise_utils';
 import { versionQueryString } from './version';
 
 /**
