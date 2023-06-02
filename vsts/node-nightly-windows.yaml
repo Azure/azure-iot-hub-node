@@ -21,7 +21,7 @@ jobs:
     displayName: 'Install Dependencies'
 
   - script: |
-       npm run ci'
+       npm run ci
        displayName: 'Unit & Integration Tests'
     env:
       IOTHUB_CONNECTION_STRING: $(IOTHUB-CONNECTION-STRING)
