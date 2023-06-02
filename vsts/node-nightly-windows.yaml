@@ -21,6 +21,7 @@ jobs:
     displayName: 'Install Dependencies'
 
   - script: |
+       npm run build
        npm run ci
        displayName: 'Unit & Integration Tests'
     env:
