@@ -59,7 +59,7 @@ jobs:
     condition: coalesce(variables.release, False)
     inputs:
       SourcePath: $(Build.ArtifactStagingDirectory)\_out
-      azureSubscription: azuresdkpartnerdrops
+      azureSubscription: azuresdkpartnerdrops-sc
       Destination: AzureBlob
       storage: azuresdkpartnerdrops
       ContainerName: 'drops/azure-iot-sdk/node/'
