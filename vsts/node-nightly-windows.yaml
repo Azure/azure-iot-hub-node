@@ -114,6 +114,7 @@ stages:
   - deployment: 'stageRelease'
     displayName: 'Approval stage for release'
     environment: 'release'
+
   # Publish artifact to partner SDK storage
   - job: 'publish'
     displayName: 'Publish to SDK partner storage'
@@ -136,13 +137,12 @@ stages:
         sourceFolder: $(Build.ArtifactStagingDirectory)\azure-iot-hub-node
         targetFolder: $(Build.ArtifactStagingDirectory)\release\$(buildFolder)
 
-  # Copy to SDK partner release storage
-  - task: AzureFileCopy@2
-    displayName: 'Copy Release Artifacts to Partner Release Pipeline'
-    condition: coalesce(variables.release, False)
-    inputs:
-      SourcePath: $(Build.ArtifactStagingDirectory)\release
-      azureSubscription: azuresdkpartnerdrops-sc
-      Destination: AzureBlob
-      storage: azuresdkpartnerdrops
-      ContainerName: 'drops/azure-iot-sdk/node/'
+    # Copy to SDK partner release storage
+    - task: AzureFileCopy@2
+      displayName: 'Copy Release Artifacts to Partner Release Pipeline'
+      inputs:
+        SourcePath: $(Build.ArtifactStagingDirectory)\release
+        azureSubscription: azuresdkpartnerdrops-sc
+        Destination: AzureBlob
+        storage: azuresdkpartnerdrops
+        ContainerName: 'drops/azure-iot-sdk/node/'
