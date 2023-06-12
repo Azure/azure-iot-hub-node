@@ -101,48 +101,48 @@ stages:
         pathToPublish: $(Build.ArtifactStagingDirectory)
         artifactName: azure-iot-hub-node
 
-- stage: Release
-  condition: ${{ parameters.release }}
-  dependsOn: ['Pack']
-  pool:
-      name: $(buildPool)
-      vmImage: $(vmImage)
-      demands:
-        - ImageOverride -equals $(vmImage)
-  jobs:
+#- stage: Release
+#  condition: ${{ parameters.release }}
+#  dependsOn: ['Pack']
+#  pool:
+#      name: $(buildPool)
+#      vmImage: $(vmImage)
+#      demands:
+#        - ImageOverride -equals $(vmImage)
+#  jobs:
   # Prompt for release approval and SBOM verification
   #- deployment: 'stageRelease'
   #  displayName: 'Approval stage for release'
   #  environment: 'release'
 
   # Publish artifact to partner SDK storage
-  - job: 'publish'
-    displayName: 'Publish to SDK partner storage'
-    steps:
+ # - job: 'publish'
+  #  displayName: 'Publish to SDK partner storage'
+  #  steps:
 
     # Download artifact
-    - task: DownloadBuildArtifacts@0
-      displayName : 'Download npm package from Build Artifacts'
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'azure-iot-hub-node'
-        downloadPath: $(Build.ArtifactStagingDirectory)
+    #- task: DownloadBuildArtifacts@0
+    #  displayName : 'Download npm package from Build Artifacts'
+    #  inputs:
+    #    buildType: 'current'
+    #    downloadType: 'single'
+    #    artifactName: 'azure-iot-hub-node'
+    #    downloadPath: $(Build.ArtifactStagingDirectory)
 
     # Copy packed npm archive to dated folder for release archive
-    - task: CopyFiles@2
-      displayName: 'Copy packed archive to artifact staging'
-      inputs:
-        contents: '*.tgz'
-        sourceFolder: $(Build.ArtifactStagingDirectory)\azure-iot-hub-node
-        targetFolder: $(Build.ArtifactStagingDirectory)\release\$(buildFolder)
+    #- task: CopyFiles@2
+    #  displayName: 'Copy packed archive to artifact staging'
+    #  inputs:
+    #    contents: '*.tgz'
+    #    sourceFolder: $(Build.ArtifactStagingDirectory)\azure-iot-hub-node
+    #    targetFolder: $(Build.ArtifactStagingDirectory)\release\$(buildFolder)
 
     # Copy to SDK partner release storage
-    - task: AzureFileCopy@2
-      displayName: 'Copy Release Artifacts to Partner Release Pipeline'
-      inputs:
-        SourcePath: $(Build.ArtifactStagingDirectory)\release
-        azureSubscription: azuresdkpartnerdrops-sc
-        Destination: AzureBlob
-        storage: azuresdkpartnerdrops
-        ContainerName: 'drops/azure-iot-sdk/node/'
+    #- task: AzureFileCopy@2
+    #  displayName: 'Copy Release Artifacts to Partner Release Pipeline'
+    #  inputs:
+    #    SourcePath: $(Build.ArtifactStagingDirectory)\release
+    #    azureSubscription: azuresdkpartnerdrops-sc
+    #    Destination: AzureBlob
+    #    storage: azuresdkpartnerdrops
+    #    ContainerName: 'drops/azure-iot-sdk/node/'
