@@ -21,9 +21,10 @@ parameters:
   default: false
 variables:
 - name: vmImage
-  value: $[variables.${{ parameters.buildAgentVmImageVar }}]
-- name: buildPool
-  value: $[variables.${{ parameters.buildAgentPoolVar }}]
+  value: 'windows-latest'
+  #value: $[variables.${{ parameters.buildAgentVmImageVar }}]
+#- name: buildPool
+  #value: $[variables.${{ parameters.buildAgentPoolVar }}]
 - name: buildFolder
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
 
@@ -43,10 +44,10 @@ stages:
   - job: run_tests
     displayName: 'Tests - Windows Node 14.x'
     pool:
-      name: $(buildPool)
+      #name: $(buildPool)
       vmImage: $(vmImage)
-      demands:
-        - ImageOverride -equals $(vmImage)
+      #demands:
+      #  - ImageOverride -equals $(vmImage)
     steps:
     - task: NodeTool@0
       displayName: 'Use Node 14.x'
@@ -65,10 +66,10 @@ stages:
 - stage: Pack
   dependsOn: ['SDL', 'Test']
   pool:
-    name: $(buildPool)
+    #name: $(buildPool)
     vmImage: $(vmImage)
-    demands:
-      - ImageOverride -equals $(vmImage)
+    #demands:
+    #  - ImageOverride -equals $(vmImage)
   jobs:
   - job: pack
     displayName: 'Package for Release'
@@ -123,10 +124,10 @@ stages:
   condition: ${{ parameters.release }}
   dependsOn: ['Pack']
   pool:
-      name: $(buildPool)
+      #name: $(buildPool)
       vmImage: $(vmImage)
-      demands:
-        - ImageOverride -equals $(vmImage)
+      #demands:
+      #  - ImageOverride -equals $(vmImage)
   jobs:
   # Prompt for release approval and SBOM verification
   #- deployment: 'stageRelease'
