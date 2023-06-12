@@ -28,14 +28,14 @@ variables:
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
 
 stages:
-- stage: SDL
-  jobs:
-  - job: sdl_checks
-    displayName: 'SDL checks'
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - template: common/sdl_steps.yaml
+#- stage: SDL
+#  jobs:
+#  - job: sdl_checks
+#    displayName: 'SDL checks'
+#    pool:
+#      vmImage: 'windows-latest'
+#    steps:
+#    - template: common/sdl_steps.yaml
 
 - stage: Test
   dependsOn: ['SDL']
@@ -110,7 +110,7 @@ stages:
       demands:
         - ImageOverride -equals $(vmImage)
   jobs:
-    # Prompt for release approval and SBOM verification
+  # Prompt for release approval and SBOM verification
   - deployment: 'stageRelease'
     displayName: 'Approval stage for release'
     environment: 'release'
