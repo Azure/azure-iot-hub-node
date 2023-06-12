@@ -36,31 +36,31 @@ stages:
       vmImage: 'windows-latest'
   - steps:
     - task: CredScan@3
-  	displayName: "Credential Scan"
-  	inputs:
-    	outputFormat: 'pre'
-    	scanFolder: $(Build.SourcesDirectory)
+    displayName: "Credential Scan"
+    inputs:
+      outputFormat: 'pre'
+      scanFolder: $(Build.SourcesDirectory)
     - task: securedevelopmentteam.vss-secure-development-tools.build-task-policheck.PoliCheck@2
-  	displayName: 'Run PoliCheck'
-  	inputs:
-    	targetType: F
+    displayName: 'Run PoliCheck'
+    inputs:
+      targetType: F
     - task: PostAnalysis@2
-  	displayName: "SDL Analysis"
-  	inputs:
-	    AllTools: false
-	    APIScan: false
-	    BinSkim: false
-	    CodesignValidation: false
-	    CredScan: true
-	    FortifySCA: false
-	    FxCop: false
-	    ModernCop: false
-	    PoliCheck: true
-	    RoslynAnalyzers: false
-	    SDLNativeRules: false
-	    Semmle: false
-	    TSLint: false
-	    ToolLogsNotFoundAction: 'Standard'
+    displayName: "SDL Analysis"
+    inputs:
+      AllTools: false
+      APIScan: false
+      BinSkim: false
+      CodesignValidation: false
+      CredScan: true
+      FortifySCA: false
+      FxCop: false
+      ModernCop: false
+      PoliCheck: true
+      RoslynAnalyzers: false
+      SDLNativeRules: false
+      Semmle: false
+      TSLint: false
+      ToolLogsNotFoundAction: 'Standard'
 
 - stage: Test
   dependsOn: ['SDL']
