@@ -1,6 +1,6 @@
 # SDL tasks
 steps:
-- task: CredScan@3
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
   displayName: "Credential Scan"
   inputs:
     outputFormat: 'pre'
