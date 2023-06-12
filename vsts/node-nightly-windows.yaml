@@ -26,14 +26,15 @@ variables:
   value: $[variables.${{ parameters.buildAgentPoolVar }}]
 - name: buildFolder
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
+
 stages:
 - stage: SDL
-jobs:
+  jobs:
   - job: sdl_checks
     displayName: 'SDL checks'
     pool:
       vmImage: 'windows-latest'
-  steps:
+  - steps:
     - task: CredScan@3
   	displayName: "Credential Scan"
   	inputs:
@@ -60,6 +61,7 @@ jobs:
 	    Semmle: false
 	    TSLint: false
 	    ToolLogsNotFoundAction: 'Standard'
+
 - stage: Test
   dependsOn: ['SDL']
   jobs:
@@ -71,7 +73,7 @@ jobs:
       demands:
         - ImageOverride -equals $(vmImage)
     steps:
-  - task: NodeTool@0
+    - task: NodeTool@0
     displayName: 'Use Node 14.x'
     inputs:
       versionSpec: '14.x'
