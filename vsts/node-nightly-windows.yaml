@@ -3,63 +3,168 @@ resources:
   - repo: self
     clean: true
 
+# Manual trigger only
+trigger: none
+pr: none
+parameters:
+- name: buildAgentPoolVar
+  displayName: 'Build agent pool'
+  type: string
+  default: 'BuildAgentPool'
+- name: buildAgentVmImageVar
+  displayName: 'Build agent image'
+  type: string
+  default: 'BuildAgentImage'
+- name: release
+  displayName: 'Release to SDK partner storage account'
+  type: boolean
+  default: false
+variables:
+- name: vmImage
+  value: $[variables.${{ parameters.buildAgentVmImageVar }}]
+- name: buildPool
+  value: $[variables.${{ parameters.buildAgentPoolVar }}]
+- name: buildFolder
+  value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
+stages:
+- stage: SDL
 jobs:
-- job: Phase_1
-  displayName: 'Windows Node 14.x'
-  condition: succeededOrFailed()
-  pool:
-    vmImage: 'windows-2019'
+  - job: sdl_checks
+    displayName: 'SDL checks'
+    pool:
+      vmImage: 'windows-latest'
   steps:
+    - task: CredScan@3
+  	displayName: "Credential Scan"
+  	inputs:
+    	outputFormat: 'pre'
+    	scanFolder: $(Build.SourcesDirectory)
+    - task: securedevelopmentteam.vss-secure-development-tools.build-task-policheck.PoliCheck@2
+  	displayName: 'Run PoliCheck'
+  	inputs:
+    	targetType: F
+    - task: PostAnalysis@2
+  	displayName: "SDL Analysis"
+  	inputs:
+	    AllTools: false
+	    APIScan: false
+	    BinSkim: false
+	    CodesignValidation: false
+	    CredScan: true
+	    FortifySCA: false
+	    FxCop: false
+	    ModernCop: false
+	    PoliCheck: true
+	    RoslynAnalyzers: false
+	    SDLNativeRules: false
+	    Semmle: false
+	    TSLint: false
+	    ToolLogsNotFoundAction: 'Standard'
+- stage: Test
+  dependsOn: ['SDL']
+  jobs:
+  - job: run_tests
+    displayName: 'Tests - Windows Node 14.x'
+    pool:
+      name: $(buildPool)
+      vmImage: $(vmImage)
+      demands:
+        - ImageOverride -equals $(vmImage)
+    steps:
   - task: NodeTool@0
     displayName: 'Use Node 14.x'
     inputs:
       versionSpec: '14.x'
 
-  - powershell: |
-       runas.exe /savecred /user:administrator
-       npm install
-    displayName: 'Install Dependencies'
+    # Unit tests
+    - script: |
+        npm install
+        npm run build
+        npm run ci
+      displayName: 'Unit Tests'
+      env:
+        IOTHUB_CONNECTION_STRING: $(IOTHUB-CONNECTION-STRING)
 
-  - script: |
-       npm run build
-       npm run ci
-       displayName: 'Unit & Integration Tests'
-    env:
-      IOTHUB_CONNECTION_STRING: $(IOTHUB-CONNECTION-STRING)
+- stage: Pack
+  dependsOn: ['SDL', 'Test']
+  pool:
+    name: $(buildPool)
+    vmImage: $(vmImage)
+    demands:
+      - ImageOverride -equals $(vmImage)
+  jobs:
+  - job: pack
+    displayName: 'Package for Release'
+    steps:
+    # Install dependencies
+    - script: npm ci
+      displayName: 'Install dependencies (CI)'
+    - script: npm run build
+      displayName: 'Typescript compile'
+    # Pack npm archive
+    - task: PowerShell@2
+      displayName: 'Create NPM pack archive'
+      inputs:
+        targetType: inline
+        script: |
+          $package = npm pack
+          echo "##vso[task.setvariable variable=package]$package"
+        workingDirectory: $(Build.SourcesDirectory)
+    # copy packed npm archive to artifact staging / dist
+    - task: CopyFiles@2
+      displayName: 'Copy packed archive to artifact staging'
+      inputs:
+        contents: $(package)
+        targetFolder: $(Build.ArtifactStagingDirectory)
+        sourceFolder: $(Build.SourcesDirectory)
+    # publish artifacts to pipeline
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish build artifacts'
+      inputs:
+        pathToPublish: $(Build.ArtifactStagingDirectory)
+        artifactName: azure-iot-hub-node
 
-  - task: DownloadBuildArtifacts@0
-    condition: coalesce(variables.release, False)
-    inputs:
-      buildType: 'specific'
-      project: 'f9b79625-2860-4d92-a4ee-57b03fabfd10' # azure-iot-sdks
-      pipeline: '296' # iot-sdks-internals-scripts pipeline
-      buildVersionToDownload: 'latest'
-      downloadType: 'single'
-      downloadPath: '$(System.ArtifactsDirectory)/scripts'
-      artifactName: 'node'
+- stage: Release
+  condition: ${{ parameters.release }}
+  dependsOn: ['Pack']
+  pool:
+      name: $(buildPool)
+      vmImage: $(vmImage)
+      demands:
+        - ImageOverride -equals $(vmImage)
+  jobs:
+    # Prompt for release approval and SBOM verification
+  - deployment: 'stageRelease'
+    displayName: 'Approval stage for release'
+    environment: 'release'
+  # Publish artifact to partner SDK storage
+  - job: 'publish'
+    displayName: 'Publish to SDK partner storage'
+    steps:
 
-  - powershell: |
-      . $(System.ArtifactsDirectory)/scripts/node/release-node.ps1
-      $outputFolder = $env:output
-      Build-Artifacts -Sources $env:sources -Output $outputFolder
-    displayName: 'npm pack'
-    condition: coalesce(variables.release, False)
-    env:
-      sources: $(Build.SourcesDirectory)
-      output: $(Build.ArtifactStagingDirectory)\_out
+    # Download artifact
+    - task: DownloadBuildArtifacts@0
+      displayName : 'Download npm package from Build Artifacts'
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'azure-iot-hub-node'
+        downloadPath: $(Build.ArtifactStagingDirectory)
 
-  - task: PublishBuildArtifacts@1
-    condition: coalesce(variables.release, False)
-    inputs:
-      PathtoPublish: $(Build.ArtifactStagingDirectory)\_out
-      ArtifactName: drop
-      publishLocation: 'Container'
+    # Copy packed npm archive to dated folder for release archive
+    - task: CopyFiles@2
+      displayName: 'Copy packed archive to artifact staging'
+      inputs:
+        contents: '*.tgz'
+        sourceFolder: $(Build.ArtifactStagingDirectory)\azure-iot-hub-node
+        targetFolder: $(Build.ArtifactStagingDirectory)\release\$(buildFolder)
 
+  # Copy to SDK partner release storage
   - task: AzureFileCopy@2
     displayName: 'Copy Release Artifacts to Partner Release Pipeline'
     condition: coalesce(variables.release, False)
     inputs:
-      SourcePath: $(Build.ArtifactStagingDirectory)\_out
+      SourcePath: $(Build.ArtifactStagingDirectory)\release
       azureSubscription: azuresdkpartnerdrops-sc
       Destination: AzureBlob
       storage: azuresdkpartnerdrops
