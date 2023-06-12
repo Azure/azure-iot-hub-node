@@ -16,7 +16,7 @@ steps:
     APIScan: false
     BinSkim: false
     CodesignValidation: false
-    CredScan: false
+    CredScan: true
     FortifySCA: false
     FxCop: false
     ModernCop: false
