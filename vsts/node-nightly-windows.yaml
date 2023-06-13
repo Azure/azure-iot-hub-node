@@ -130,9 +130,9 @@ stages:
       #  - ImageOverride -equals $(vmImage)
   jobs:
   # Prompt for release approval and SBOM verification
-  #- deployment: 'stageRelease'
-  #  displayName: 'Approval stage for release'
-  #  environment: 'release'
+  - deployment: 'stageRelease'
+    displayName: 'Approval stage for release'
+    environment: 'release'
 
   # Publish artifact to partner SDK storage
   - job: 'publish'
