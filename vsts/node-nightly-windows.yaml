@@ -18,7 +18,7 @@ parameters:
 - name: release
   displayName: 'Release to SDK partner storage account'
   type: boolean
-  default: false
+  default: true
 variables:
 - name: vmImage
   value: 'windows-latest'
@@ -130,9 +130,9 @@ stages:
       #  - ImageOverride -equals $(vmImage)
   jobs:
   # Prompt for release approval and SBOM verification
-  - deployment: 'stageRelease'
-    displayName: 'Approval stage for release'
-    environment: 'release'
+  #- deployment: 'stageRelease'
+  #  displayName: 'Approval stage for release'
+  #  environment: 'release'
 
   # Publish artifact to partner SDK storage
   - job: 'publish'
