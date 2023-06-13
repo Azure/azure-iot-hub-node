@@ -18,7 +18,7 @@ parameters:
 - name: release
   displayName: 'Release to SDK partner storage account'
   type: boolean
-  default: true
+  default: false
 variables:
 - name: vmImage
   value: 'windows-latest'
