@@ -23,10 +23,11 @@ parameters:
 
 variables:
 - name: vmImage
-  #value: 'windows-latest'
-  value: $[variables.${{ parameters.buildAgentVmImageVar }}]
+  value: 'Azure-Iot-Hub-Main-Hosted-2'
+  #value: $[variables.${{ parameters.buildAgentVmImageVar }}]
 - name: buildPool
-  value: $[variables.${{ parameters.buildAgentPoolVar }}]
+  value: 'Azure-Iot-Hub-Main-Hosted-2'
+  #value: $[variables.${{ parameters.buildAgentPoolVar }}]
 - name: buildFolder
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
 
