@@ -11,11 +11,11 @@ parameters:
 - name: buildAgentPoolVar
   displayName: 'Build agent pool'
   type: string
-  default: 'Azure-Iot-Hub-Main-Hosted-2'
+  default: Azure-Iot-Hub-Main-Hosted-2
 - name: buildAgentVmImageVar
   displayName: 'Build agent image'
   type: string
-  default: 'Azure-Iot-Hub-Main-Hosted-2'
+  default: Azure-Iot-Hub-Main-Hosted-2
 - name: release
   displayName: 'Release to SDK partner storage account'
   type: boolean
