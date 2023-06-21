@@ -1,0 +1,13 @@
+{
+    "tool": "Credential Scanner",
+    "suppressions": [
+        {
+            "file": "test_resources/deploy.sh",
+            "_justification": "Files contain fake credentials used by test code."
+        },
+        {
+            "file": "test_resources/test-resources.bicep",
+            "_justification": "Files contain fake credentials used by test code."
+        }
+    ]
+}
