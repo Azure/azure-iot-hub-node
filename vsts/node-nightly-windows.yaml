@@ -8,26 +8,13 @@ trigger: none
 pr: none
 
 parameters:
-- name: buildAgentPoolVar
-  displayName: 'Build agent pool'
-  type: string
-  default: 'Azure-Iot-Hub-Main-Hosted-2'
-- name: buildAgentVmImageVar
-  displayName: 'Build agent image'
-  type: string
-  default: 'Azure-Iot-Hub-Main-Hosted-2'
 - name: release
   displayName: 'Release to SDK partner storage account'
   type: boolean
   default: false
-
 variables:
 - name: vmImage
-  value: 'Azure-Iot-Hub-Main-Hosted-2'
-  #value: $[variables.${{ parameters.buildAgentVmImageVar }}]
-- name: buildPool
-  value: 'Azure-Iot-Hub-Main-Hosted-2'
-  #value: $[variables.${{ parameters.buildAgentPoolVar }}]
+  value: 'windows-latest'
 - name: buildFolder
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
 
@@ -47,10 +34,8 @@ stages:
   - job: run_tests
     displayName: 'Tests - Windows Node 14.x'
     pool:
-      name: $(buildPool)
       vmImage: $(vmImage)
-      demands:
-        - ImageOverride -equals $(vmImage)
+
     steps:
     - task: NodeTool@0
       displayName: 'Use Node 14.x'
@@ -69,10 +54,8 @@ stages:
 - stage: Pack
   dependsOn: ['SDL', 'Test']
   pool:
-    name: $(buildPool)
     vmImage: $(vmImage)
-    demands:
-      - ImageOverride -equals $(vmImage)
+
   jobs:
   - job: pack
     displayName: 'Package for Release'
@@ -127,16 +110,9 @@ stages:
   condition: ${{ parameters.release }}
   dependsOn: ['Pack']
   pool:
-      name: $(buildPool)
       vmImage: $(vmImage)
-      demands:
-        - ImageOverride -equals $(vmImage)
-  jobs:
-  # Prompt for release approval and SBOM verification
-  #- deployment: 'stageRelease'
-  #  displayName: 'Approval stage for release'
-  #  environment: 'release'
 
+  jobs:
   # Publish artifact to partner SDK storage
   - job: 'publish'
     displayName: 'Publish to SDK partner storage'
