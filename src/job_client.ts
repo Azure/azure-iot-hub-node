@@ -234,7 +234,7 @@ export class JobClient {
         type: 'scheduleDeviceMethod',
         cloudToDeviceMethod: fullMethodParams,
         startTime: jobStartTime ? (jobStartTime as Date).toISOString() : null,
-        maxExecutionTimeInSeconds: maxExecutionTimeInSeconds as number
+        maxExecutionTimeInSeconds: maxExecutionTimeInSeconds ?? defaultMaxExecutionTimeInSeconds
       };
 
       if (typeof queryCondition === 'string') {
@@ -308,7 +308,7 @@ export class JobClient {
         type: 'scheduleUpdateTwin',
         updateTwin: patch,
         startTime: jobStartTime ? (jobStartTime as Date).toISOString() : null,
-        maxExecutionTimeInSeconds: maxExecutionTimeInSeconds as number
+        maxExecutionTimeInSeconds: maxExecutionTimeInSeconds ?? defaultMaxExecutionTimeInSeconds
       };
 
       if (typeof queryCondition === 'string') {
