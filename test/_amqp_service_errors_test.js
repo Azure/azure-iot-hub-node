@@ -4,7 +4,7 @@
 'use strict';
 
 const assert = require('chai').assert;
-const errors = require('azure-iot-common').errors;
+const errors = require('../dist/common-core/errors.js');
 const translateError = require('../dist/amqp_service_errors.js').translateError;
 
 describe('translateError', function () {

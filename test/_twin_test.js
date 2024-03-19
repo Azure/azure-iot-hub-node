@@ -5,7 +5,7 @@
 
 const assert = require('chai').assert;
 const sinon = require('sinon');
-const errors = require('azure-iot-common').errors;
+const errors = require('../dist/common-core/errors.js');
 const Registry = require('../dist/registry.js').Registry;
 const Twin = require('../dist/twin.js').Twin;
 

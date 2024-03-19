@@ -3,11 +3,11 @@
 
 'use strict';
 
-const errors = require('azure-iot-common').errors;
-const results = require('azure-iot-common').results;
+const errors = require('../dist/common-core/errors.js');
+const results = require('../dist/common-core/results.js');
 const EventEmitter = require('events').EventEmitter;
 const util = require('util');
-const AmqpReceiver = require('azure-iot-amqp-base').AmqpReceiver;
+const AmqpReceiver = require('../dist/common-amqp/receiver_link.js').ReceiverLink;
 
 function SimulatedAmqp() {
   EventEmitter.call(this);

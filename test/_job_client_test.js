@@ -12,7 +12,7 @@ const JobClient = require('../dist/job_client').JobClient;
 const ConnectionString = require('../iothub').ConnectionString;
 const SharedAccessSignature = require('../iothub').SharedAccessSignature;
 const DeviceMethod = require('../dist/device_method').DeviceMethod;
-const RestApiClient = require('azure-iot-http-base').RestApiClient;
+const RestApiClient = require('../dist/common-http/rest_api_client').RestApiClient;
 const Query = require('../dist/query').Query;
 
 const defaultMaxExecutionTimeInSeconds = 3600;
