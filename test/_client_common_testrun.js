@@ -6,8 +6,8 @@
 
 const assert = require('chai').assert;
 const Client = require('../dist/client.js').Client;
-const errors = require('azure-iot-common').errors;
-const Message = require('azure-iot-common').Message;
+const errors = require('../dist/common-core/errors.js');
+const Message = require('../dist/common-core/message.js').Message;
 const debug = require('debug')('azure-iothub:_client_common_testrun');
 
 function transportSpecificTests(opts) {

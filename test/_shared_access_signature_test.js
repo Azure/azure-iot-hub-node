@@ -4,7 +4,7 @@
 'use strict';
 
 const assert = require('chai').assert;
-const ArgumentError = require('azure-iot-common').errors.ArgumentError;
+const ArgumentError = require('../dist/common-core/errors.js').ArgumentError;
 const SharedAccessSignature = require('../dist/shared_access_signature.js');
 
 const incompleteSignatures = {

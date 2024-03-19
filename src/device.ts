@@ -129,14 +129,6 @@ export class Device implements DeviceIdentity {
 
       _.merge(this, userProps);
     }
-
-    Object.defineProperty(this.authentication, 'SymmetricKey', {
-      enumerable: true,
-      get: function (): Device._SymmetricKey {
-        /*Codes_SRS_NODE_SERVICE_DEVICE_16_005: [The `authentication.SymmetricKey` property shall return the content of the `authentication.symmetricKey` property (the latter being the valid property returned by the IoT hub in the device description).]*/
-        return this.symmetricKey;
-      }
-    });
   }
 }
 
@@ -150,7 +142,6 @@ export namespace Device {
 
   export interface Authentication {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    SymmetricKey?: _SymmetricKey;
     symmetricKey?: _SymmetricKey;
     x509Thumbprint?: X509Thumbprints;
   }

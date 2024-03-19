@@ -9,8 +9,8 @@ const sinon = require('sinon');
 const EventEmitter = require('events').EventEmitter;
 const Amqp = require('../dist/amqp.js').Amqp;
 const Client = require('../dist/client.js').Client;
-const Message = require('azure-iot-common').Message;
-const errors = require('azure-iot-common').errors;
+const errors = require('../dist/common-core/errors.js');
+const Message = require('../dist/common-core/message.js').Message;
 const SimulatedAmqp = require('./amqp_simulated.js');
 const transportSpecificTests = require('./_client_common_testrun.js');
 

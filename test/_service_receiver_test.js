@@ -6,7 +6,7 @@
 const EventEmitter = require('events').EventEmitter;
 const assert = require('chai').assert;
 const sinon = require('sinon');
-const Message = require('azure-iot-common').Message;
+const Message = require('../dist/common-core/message.js').Message;
 const ServiceReceiver = require('../dist/service_receiver.js').ServiceReceiver;
 
 describe('ServiceReceiver', function () {

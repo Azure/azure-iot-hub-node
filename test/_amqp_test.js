@@ -6,11 +6,11 @@ const sinon = require('sinon');
 const EventEmitter = require('events').EventEmitter;
 const Amqp = require('../dist/amqp.js').Amqp;
 const assert = require('chai').assert;
-const SharedAccessSignature = require('azure-iot-common').SharedAccessSignature;
-const errors = require('azure-iot-common').errors;
-const results = require('azure-iot-common').results;
-const Message = require('azure-iot-common').Message;
-const AmqpMessage = require('azure-iot-amqp-base').AmqpMessage;
+const SharedAccessSignature = require('../dist/common-core/shared_access_signature.js').SharedAccessSignature;
+const errors = require('../dist/common-core/errors.js');
+const results = require('../dist/common-core/results.js');
+const Message = require('../dist/common-core/message.js').Message;
+const AmqpMessage = require('../dist/common-amqp/amqp_message.js').AmqpMessage;
 
 
 const fakeConfig = {

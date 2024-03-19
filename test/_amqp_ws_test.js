@@ -5,7 +5,7 @@
 const Amqp = require('../dist/amqp.js').Amqp;
 const AmqpWs = require('../dist/amqp_ws.js').AmqpWs;
 const assert = require('chai').assert;
-const results = require('azure-iot-common').results;
+const results = require('../dist/common-core/results.js');
 const sinon = require('sinon');
 
 describe('AmqpWs', function () {
