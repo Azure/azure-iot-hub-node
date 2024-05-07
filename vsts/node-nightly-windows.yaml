@@ -14,7 +14,7 @@ parameters:
   default: false
 variables:
 - name: vmImage
-  value: 'windows-latest'
+  value: 'onebranch.azurecr.io/windows/ltsc2019/vse2019:latest'
 - name: buildFolder
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
 
@@ -24,7 +24,7 @@ stages:
   - job: sdl_checks
     displayName: 'SDL checks'
     pool:
-      vmImage: 'windows-latest'
+      vmImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2019:latest'
     steps:
     - template: common/sdl_steps.yaml
 
