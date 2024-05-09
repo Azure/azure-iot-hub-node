@@ -1,6 +1,16 @@
 name: $(BuildID)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+# Manual trigger only
+trigger: none
+pr: none
+
+variables:
+  WindowsContainerImage: 'onebranch.azurecr.io/windows/ltsc2022/vse2022:latest' # for Windows jobs https://aka.ms/obpipelines/containers
+  buildFolder: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
+
 resources:
   repositories: 
+  # OneBranch Template Resource definition.
   - repository: templates
     type: git
     name: OneBranch.Pipelines/GovernedTemplates
@@ -8,20 +18,11 @@ resources:
   - repository: self
     clean: true
 
-# Manual trigger only
-trigger: none
-pr: none
-
 parameters:
 - name: release
   displayName: 'Release to SDK partner storage account'
   type: boolean
   default: false
-variables:
-- name: vmImage
-  value: 'onebranch.azurecr.io/windows/ltsc2022/vse2022:latest'
-- name: buildFolder
-  value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
 
 stages:
 - stage: SDL
