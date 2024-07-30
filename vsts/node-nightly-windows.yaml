@@ -140,7 +140,7 @@ stages:
       displayName: 'Copy Release Artifacts to Partner Release Pipeline'
       inputs:
         SourcePath: $(Build.ArtifactStagingDirectory)\release
-        azureSubscription: azuresdkpartnerdrops-sc
+        azureSubscription: azuresdkpartnerdropssc
         Destination: AzureBlob
         storage: azuresdkpartnerdrops
         ContainerName: 'drops/azure-iot-sdk/node/'
