@@ -166,7 +166,7 @@ export class Client extends EventEmitter {
       }
 
       /*Codes_SRS_NODE_IOTHUB_CLIENT_05_014: [The `send` method shall convert the `message` object to type `azure-iot-common.Message` if it is not already of type `azure-iot-common.Message`.]*/
-      if ((<any>message.constructor).name !== 'Message') {
+      if (!(message instanceof Message)) {
         /*Codes_SRS_NODE_IOTHUB_CLIENT_18_016: [The `send` method shall throw an `ArgumentError` if the `message` argument is not of type `azure-iot-common.Message` or `azure-iot-common.Message.BufferConvertible`.]*/
         if (!Message.isBufferConvertible(message)) {
           throw new errors.ArgumentError('message is not of type Message or Message.BufferConvertible');
