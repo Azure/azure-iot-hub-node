@@ -7,9 +7,6 @@ resources:
 trigger: none
 pr: none
 
-extends:
-  template: v2/OneBranch.NonOfficial.CrossPlat.yml@onebranchTemplates
-
 parameters:
 - name: release
   displayName: 'Release to SDK partner storage account'
@@ -21,6 +18,8 @@ variables:
 - name: buildFolder
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
 
+extends:
+  template: v2/OneBranch.NonOfficial.CrossPlat.yml@onebranchTemplates
   stages:
   - stage: SDL
     jobs:
