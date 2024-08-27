@@ -1,5 +1,6 @@
 name: $(BuildID)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 resources:
+  repositories:
   - repo: self
     clean: true
   - repository: onebranchTemplates
