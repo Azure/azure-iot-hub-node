@@ -20,7 +20,8 @@ parameters:
 variables:
 - name: buildFolder
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
-  WindowsContainerImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2022:latest'
+- name: WindowsContainerImage
+  value: 'onebranch.azurecr.io/windows/ltsc2019/vse2022:latest'
 
 extends:
   template: v2/OneBranch.NonOfficial.CrossPlat.yml@onebranchTemplates
