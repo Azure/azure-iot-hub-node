@@ -7,6 +7,9 @@ resources:
 trigger: none
 pr: none
 
+extends:
+  template: v2/OneBranch.NonOfficial.CrossPlat.yml@onebranchTemplates
+
 parameters:
 - name: release
   displayName: 'Release to SDK partner storage account'
