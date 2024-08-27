@@ -34,7 +34,32 @@ extends:
         pool:
           vmImage: 'windows-latest'
         steps:
-        - template: common/sdl_steps.yaml
+        - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
+          displayName: "Credential Scan"
+          inputs:
+            outputFormat: 'pre'
+            scanFolder: $(Build.SourcesDirectory)
+        - task: securedevelopmentteam.vss-secure-development-tools.build-task-policheck.PoliCheck@2
+          displayName: 'Run PoliCheck'
+          inputs:
+            targetType: F
+        - task: PostAnalysis@2
+          displayName: "SDL Analysis"
+          inputs:
+            AllTools: false
+            APIScan: false
+            BinSkim: false
+            CodesignValidation: false
+            CredScan: true
+            FortifySCA: false
+            FxCop: false
+            ModernCop: false
+            PoliCheck: true
+            RoslynAnalyzers: false
+            SDLNativeRules: false
+            Semmle: false
+            TSLint: false
+            ToolLogsNotFoundAction: 'Standard'
 
     - stage: Test
       dependsOn: ['SDL']
