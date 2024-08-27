@@ -18,12 +18,9 @@ parameters:
   type: boolean
   default: false
 variables:
-- name: vmImage
-  value: 'windows-latest'
 - name: buildFolder
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
-- name: WindowsContainerImage
-  value: 'onebranch.azurecr.io/windows/ltsc2019/vse2022:latest'
+  WindowsContainerImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2022:latest'
 
 extends:
   template: v2/OneBranch.NonOfficial.CrossPlat.yml@onebranchTemplates
@@ -35,6 +32,8 @@ extends:
         displayName: 'SDL checks'
         pool:
           type: windows
+        variables:
+          ob_outputDirectory: '$(Build.SourcesDirectory)\out'
         steps:
         - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
           displayName: "Credential Scan"
@@ -70,6 +69,8 @@ extends:
         displayName: 'Tests - Windows Node 14.x'
         pool:
           type: windows
+        variables:
+          ob_outputDirectory: '$(Build.SourcesDirectory)\out'
 
         steps:
         - task: NodeTool@0
@@ -90,6 +91,8 @@ extends:
       dependsOn: ['SDL', 'Test']
       pool:
         type: windows
+      variables:
+        ob_outputDirectory: '$(Build.SourcesDirectory)\out'
 
       jobs:
       - job: pack
@@ -146,6 +149,8 @@ extends:
       dependsOn: ['Pack']
       pool:
         type: windows
+      variables:
+        ob_outputDirectory: '$(Build.SourcesDirectory)\out'
 
       jobs:
       # Publish artifact to partner SDK storage
