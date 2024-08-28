@@ -27,58 +27,20 @@ extends:
   template: v2/OneBranch.NonOfficial.CrossPlat.yml@onebranchTemplates
   parameters:
     stages:
-    - stage: SDL
-      jobs:
-      - job: sdl_checks
-        displayName: 'SDL checks'
-        pool:
-          type: windows
-        variables:
-          ob_outputDirectory: '$(Build.SourcesDirectory)\out'
-        steps:
-        - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
-          displayName: "Credential Scan"
-          inputs:
-            outputFormat: 'pre'
-            scanFolder: $(Build.SourcesDirectory)
-        - task: securedevelopmentteam.vss-secure-development-tools.build-task-policheck.PoliCheck@2
-          displayName: 'Run PoliCheck'
-          inputs:
-            targetType: F
-        - task: PostAnalysis@2
-          displayName: "SDL Analysis"
-          inputs:
-            AllTools: false
-            APIScan: false
-            BinSkim: false
-            CodesignValidation: false
-            CredScan: true
-            FortifySCA: false
-            FxCop: false
-            ModernCop: false
-            PoliCheck: true
-            RoslynAnalyzers: false
-            SDLNativeRules: false
-            Semmle: false
-            TSLint: false
-            ToolLogsNotFoundAction: 'Standard'
-
     - stage: Test
-      dependsOn: ['SDL']
+      displayName: 'Build and Test'
       jobs:
-      - job: run_tests
+      - job: build_and_test
         displayName: 'Tests - Windows Node 14.x'
         pool:
           type: windows
         variables:
           ob_outputDirectory: '$(Build.SourcesDirectory)\out'
-
         steps:
         - task: NodeTool@0
           displayName: 'Use Node 14.x'
           inputs:
             versionSpec: '14.x'
-
         # Unit tests
         - script: |
             npm install
@@ -88,8 +50,8 @@ extends:
           env:
             IOTHUB_CONNECTION_STRING: $(IOTHUB-CONNECTION-STRING)
 
-    - stage: Pack
-      dependsOn: ['SDL', 'Test']
+    - stage: Package
+      dependsOn: ['Test']
       pool:
         type: windows
       variables:
