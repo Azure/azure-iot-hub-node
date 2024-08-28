@@ -58,7 +58,7 @@ extends:
         ob_outputDirectory: '$(Build.SourcesDirectory)\out'
 
       jobs:
-      - job: pack
+      - job: packageWindows
         displayName: 'Package for Release'
         steps:
 
@@ -109,7 +109,7 @@ extends:
 
     - stage: Release
       condition: ${{ parameters.release }}
-      dependsOn: ['Pack']
+      dependsOn: ['Package']
       pool:
         type: windows
       variables:
