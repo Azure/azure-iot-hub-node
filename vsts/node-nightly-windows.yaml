@@ -51,17 +51,16 @@ extends:
             IOTHUB_CONNECTION_STRING: $(IOTHUB-CONNECTION-STRING)
 
     - stage: Package
+      displayName: 'Package for Release'
       dependsOn: ['Test']
-      pool:
-        type: windows
-      variables:
-        ob_outputDirectory: '$(Build.SourcesDirectory)\out'
-
       jobs:
       - job: packageWindows
         displayName: 'Package for Release'
+        pool:
+          type: windows
+        variables:
+          ob_outputDirectory: '$(Build.SourcesDirectory)\out'
         steps:
-
         # Run SBOM on source
         - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
           displayName: 'Generate software manifest for executable'
@@ -108,19 +107,18 @@ extends:
             artifactName: azure-iot-hub-node
 
     - stage: Release
+      displayName: 'Publish Release'
       condition: ${{ parameters.release }}
       dependsOn: ['Package']
-      pool:
-        type: windows
-      variables:
-        ob_outputDirectory: '$(Build.SourcesDirectory)\out'
-
       jobs:
       # Publish artifact to partner SDK storage
       - job: 'publish'
         displayName: 'Publish to SDK partner storage'
+        pool:
+          type: windows
+        variables:
+          ob_outputDirectory: '$(Build.SourcesDirectory)\out'
         steps:
-
         # Download artifact
         - task: DownloadBuildArtifacts@0
           displayName : 'Download npm package from Build Artifacts'
