@@ -2,7 +2,10 @@ name: $(BuildID)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Re
 resources:
   repositories:
   - repository: self
-    clean: true
+    type: github
+    endpoint: 'Azure-IoT-Hub-Node-Github-Service-Connection'
+    name: Azure/azure-iot-hub-node
+    ref: refs/heads/main
   - repository: onebranchTemplates
     type: git
     name: OneBranch.Pipelines/GovernedTemplates
