@@ -1,15 +1,7 @@
 name: $(BuildID)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 resources:
-  repositories:
-  - repository: self
-    type: github
-    endpoint: 'Azure-IoT-Hub-Node-Github-Service-Connection'
-    name: Azure/azure-iot-hub-node
-    ref: refs/heads/main
-  - repository: onebranchTemplates
-    type: git
-    name: OneBranch.Pipelines/GovernedTemplates
-    ref: refs/heads/main
+  - repo: self
+    clean: true
 
 # Manual trigger only
 trigger: none
@@ -21,130 +13,134 @@ parameters:
   type: boolean
   default: false
 variables:
+- name: vmImage
+  value: 'windows-latest'
 - name: buildFolder
   value: $[ format('{0:yyyy}-{0:MM}-{0:dd}', pipeline.startTime) ]
-- name: WindowsContainerImage
-  value: 'onebranch.azurecr.io/windows/ltsc2019/vse2022:latest'
 
-extends:
-  template: v2/OneBranch.NonOfficial.CrossPlat.yml@onebranchTemplates
-  parameters:
-    stages:
-    - stage: Test
-      displayName: 'Build and Test'
-      jobs:
-      - job: build_and_test
-        displayName: 'Tests - Windows Node 14.x'
-        pool:
-          type: windows
-        variables:
-          ob_outputDirectory: '$(Build.SourcesDirectory)\out'
-        steps:
-        - task: NodeTool@0
-          displayName: 'Use Node 14.x'
-          inputs:
-            versionSpec: '14.x'
-        # Unit tests
-        - script: |
-            npm install
-            npm run build
-            npm run ci
-          displayName: 'Unit Tests'
-          env:
-            IOTHUB_CONNECTION_STRING: $(IOTHUB-CONNECTION-STRING)
+stages:
+- stage: SDL
+  jobs:
+  - job: sdl_checks
+    displayName: 'SDL checks'
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - template: common/sdl_steps.yaml
 
-    - stage: Package
-      displayName: 'Package for Release'
-      dependsOn: ['Test']
-      jobs:
-      - job: packageWindows
-        displayName: 'Package for Release'
-        pool:
-          type: windows
-        variables:
-          ob_outputDirectory: '$(Build.SourcesDirectory)\out'
-        steps:
-        # Run SBOM on source
-        - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
-          displayName: 'Generate software manifest for executable'
-          inputs:
-            BuildDropPath: $(Build.SourcesDirectory)
+- stage: Test
+  dependsOn: ['SDL']
+  jobs:
+  - job: run_tests
+    displayName: 'Tests - Windows Node 14.x'
+    pool:
+      vmImage: $(vmImage)
 
-        # Publish SBOM manifest artifact
-        - task: PublishBuildArtifacts@1
-          displayName: 'Publish build artifacts'
-          inputs:
-            pathToPublish: $(Build.SourcesDirectory)\_manifest
-            artifactName: SBOM
+    steps:
+    - task: NodeTool@0
+      displayName: 'Use Node 14.x'
+      inputs:
+        versionSpec: '14.x'
 
-        # Install dependencies
-        - script: npm ci
-          displayName: 'Install dependencies (CI)'
+    # Unit tests
+    - script: |
+        npm install
+        npm run build
+        npm run ci
+      displayName: 'Unit Tests'
+      env:
+        IOTHUB_CONNECTION_STRING: $(IOTHUB-CONNECTION-STRING)
 
-        - script: npm run build
-          displayName: 'Typescript compile'
+- stage: Pack
+  dependsOn: ['SDL', 'Test']
+  pool:
+    vmImage: $(vmImage)
 
-        # Pack npm archive
-        - task: PowerShell@2
-          displayName: 'Create NPM pack archive'
-          inputs:
-            targetType: inline
-            script: |
-              $package = npm pack
-              echo "##vso[task.setvariable variable=package]$package"
-            workingDirectory: $(Build.SourcesDirectory)
+  jobs:
+  - job: pack
+    displayName: 'Package for Release'
+    steps:
 
-        # copy packed npm archive to artifact staging / dist
-        - task: CopyFiles@2
-          displayName: 'Copy packed archive to artifact staging'
-          inputs:
-            contents: $(package)
-            targetFolder: $(Build.ArtifactStagingDirectory)
-            sourceFolder: $(Build.SourcesDirectory)
+    # Run SBOM on source
+    - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+      displayName: 'Generate software manifest for executable'
+      inputs:
+        BuildDropPath: $(Build.SourcesDirectory)
 
-        # publish artifacts to pipeline
-        - task: PublishBuildArtifacts@1
-          displayName: 'Publish build artifacts'
-          inputs:
-            pathToPublish: $(Build.ArtifactStagingDirectory)
-            artifactName: azure-iot-hub-node
+    # Publish SBOM manifest artifact
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish build artifacts'
+      inputs:
+        pathToPublish: $(Build.SourcesDirectory)\_manifest
+        artifactName: SBOM
 
-    - stage: Release
-      displayName: 'Publish Release'
-      condition: ${{ parameters.release }}
-      dependsOn: ['Package']
-      jobs:
-      # Publish artifact to partner SDK storage
-      - job: 'publish'
-        displayName: 'Publish to SDK partner storage'
-        pool:
-          type: windows
-        variables:
-          ob_outputDirectory: '$(Build.SourcesDirectory)\out'
-        steps:
-        # Download artifact
-        - task: DownloadBuildArtifacts@0
-          displayName : 'Download npm package from Build Artifacts'
-          inputs:
-            buildType: 'current'
-            downloadType: 'single'
-            artifactName: 'azure-iot-hub-node'
-            downloadPath: $(Build.ArtifactStagingDirectory)
+    # Install dependencies
+    - script: npm ci
+      displayName: 'Install dependencies (CI)'
 
-        # Copy packed npm archive to dated folder for release archive
-        - task: CopyFiles@2
-          displayName: 'Copy packed archive to artifact staging'
-          inputs:
-            contents: '*.tgz'
-            sourceFolder: $(Build.ArtifactStagingDirectory)\azure-iot-hub-node
-            targetFolder: $(Build.ArtifactStagingDirectory)\release\$(buildFolder)
+    - script: npm run build
+      displayName: 'Typescript compile'
 
-        # Copy to SDK partner release storage
-        - task: AzureFileCopy@2
-          displayName: 'Copy Release Artifacts to Partner Release Pipeline'
-          inputs:
-            SourcePath: $(Build.ArtifactStagingDirectory)\release
-            azureSubscription: azuresdkpartnerdropssc
-            Destination: AzureBlob
-            storage: azuresdkpartnerdrops
-            ContainerName: 'drops/azure-iot-sdk/node/'
+    # Pack npm archive
+    - task: PowerShell@2
+      displayName: 'Create NPM pack archive'
+      inputs:
+        targetType: inline
+        script: |
+          $package = npm pack
+          echo "##vso[task.setvariable variable=package]$package"
+        workingDirectory: $(Build.SourcesDirectory)
+
+    # copy packed npm archive to artifact staging / dist
+    - task: CopyFiles@2
+      displayName: 'Copy packed archive to artifact staging'
+      inputs:
+        contents: $(package)
+        targetFolder: $(Build.ArtifactStagingDirectory)
+        sourceFolder: $(Build.SourcesDirectory)
+
+    # publish artifacts to pipeline
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish build artifacts'
+      inputs:
+        pathToPublish: $(Build.ArtifactStagingDirectory)
+        artifactName: azure-iot-hub-node
+
+- stage: Release
+  condition: ${{ parameters.release }}
+  dependsOn: ['Pack']
+  pool:
+      vmImage: $(vmImage)
+
+  jobs:
+  # Publish artifact to partner SDK storage
+  - job: 'publish'
+    displayName: 'Publish to SDK partner storage'
+    steps:
+
+    # Download artifact
+    - task: DownloadBuildArtifacts@0
+      displayName : 'Download npm package from Build Artifacts'
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'azure-iot-hub-node'
+        downloadPath: $(Build.ArtifactStagingDirectory)
+
+    # Copy packed npm archive to dated folder for release archive
+    - task: CopyFiles@2
+      displayName: 'Copy packed archive to artifact staging'
+      inputs:
+        contents: '*.tgz'
+        sourceFolder: $(Build.ArtifactStagingDirectory)\azure-iot-hub-node
+        targetFolder: $(Build.ArtifactStagingDirectory)\release\$(buildFolder)
+
+    # Copy to SDK partner release storage
+    - task: AzureFileCopy@2
+      displayName: 'Copy Release Artifacts to Partner Release Pipeline'
+      inputs:
+        SourcePath: $(Build.ArtifactStagingDirectory)\release
+        azureSubscription: azuresdkpartnerdropssc
+        Destination: AzureBlob
+        storage: azuresdkpartnerdrops
+        ContainerName: 'drops/azure-iot-sdk/node/'
