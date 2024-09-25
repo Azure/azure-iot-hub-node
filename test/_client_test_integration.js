@@ -9,7 +9,7 @@ const transportSpecificTests = require('./_client_common_testrun.js');
 
 describe('Over real AMQP (Default Transport)', function () {
   // eslint-disable-next-line no-invalid-this
-  this.timeout(60000);
+  this.timeout(120000);
   const opts = {
     transport: null,
     connectionString: process.env.IOTHUB_CONNECTION_STRING,
@@ -20,7 +20,7 @@ describe('Over real AMQP (Default Transport)', function () {
 
 describe('Over real AMQP over Websockets', function () {
   // eslint-disable-next-line no-invalid-this
-  this.timeout(60000);
+  this.timeout(120000);
   const opts = {
     transport: AmqpWs,
     connectionString: process.env.IOTHUB_CONNECTION_STRING,
