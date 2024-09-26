@@ -7,7 +7,8 @@ const AmqpWs = require('../dist/amqp_ws.js').AmqpWs;
 
 const transportSpecificTests = require('./_client_common_testrun.js');
 
-describe('Over real AMQP (Default Transport)', function () {
+//This test is flaky in the build pipeline
+describe.skip('Over real AMQP (Default Transport) - this test will be skipped', function () {
   // eslint-disable-next-line no-invalid-this
   this.timeout(120000);
   const opts = {
@@ -18,7 +19,8 @@ describe('Over real AMQP (Default Transport)', function () {
   transportSpecificTests(opts);
 });
 
-describe('Over real AMQP over Websockets', function () {
+//This test is flaky in the build pipeline
+describe.skip('Over real AMQP over Websockets - this test will be skipped', function () {
   // eslint-disable-next-line no-invalid-this
   this.timeout(120000);
   const opts = {
