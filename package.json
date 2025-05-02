@@ -11,12 +11,13 @@
     "@azure/identity": "^4.0.1",
     "@azure/ms-rest-js": "^2.0.5",
     "async": "^3.2.3",
+    "azure-iothub": "file:",
     "debug": "^4.3.1",
     "getos": "^3.2.1",
     "lodash": "^4.17.21",
     "machina": "^4.0.2",
     "rhea": "^1.0.15",
-    "ws": "^8.16.0"
+    "ws": "^8.17.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.5",
