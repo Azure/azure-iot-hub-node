@@ -225,3 +225,5 @@ lerna-debug.log
 # longhaul settings
 **/_settings.json
 
+# .npmrc file
+**/.npmrc
